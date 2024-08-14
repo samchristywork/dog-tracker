@@ -28,7 +28,53 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+  let chart;
   function refreshStats() {
+    fetch('/stats')
+    .then(response => response.json())
+    .then(d => {
+
+      if (d.length === 0) {
+        document.getElementById('stats').innerHTML = `
+          <h2>Stats</h2>
+          No activities yet
+          <br>
+          <button onclick="refreshStats()">Refresh</button>
+        `;
+        return;
+      }
+
+      for(let i = 0; i < d.length-1; i++) {
+        d[i].duration = d[i+1].time - d[i].time;
+      }
+      d[d.length-1].duration = new Date().getTime() - d[d.length-1].time;
+
+      let total = d.reduce((acc, activity) => acc + activity.duration, 0);
+
+      let currentTime = new Date().getTime();
+      let stats = d.map(activity => {
+        let time = parseInt(activity.time);
+        let diff = currentTime - time;
+        let minutesAgo = Math.floor(diff / 60000);
+        let duration = activity.duration / 60000;
+        let date = new Date(time).toLocaleString();
+        return `
+          <tr>
+            <td>${date} (${minutesAgo})</td>
+            <td>${activity.activity}</td>
+          </tr>
+        `;
+      }).join('');
+      document.getElementById('stats').innerHTML = `
+        <h2>Stats</h2>
+        <table>
+          ${stats}
+        </table>
+        <br>
+        <button onclick="refreshStats()">Refresh</button>
+      `;
+      });
+    });
   }
 
   refreshStats();
