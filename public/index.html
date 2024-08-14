@@ -11,7 +11,26 @@
 </head>
 
 <body>
+  <form action="activity" method="post">
+    <label for="activity">Activity:</label>
+    <select name="activity" id="activity">
+      <option value="outside">Outside</option>
+      <option value="crate">Crate</option>
+      <option value="walk">Walk</option>
+    </select>
+    <input type="submit" value="Submit">
+  </form>
+  <h2>Activities</h2>
+  <canvas id="chart" width="400" height="400"></canvas>
+  <div id="stats"></div>
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+  function refreshStats() {
+  }
+
+  refreshStats();
 </script>
 </html>
