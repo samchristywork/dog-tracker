@@ -62,11 +62,12 @@
         let time = parseInt(activity.time);
         let diff = currentTime - time;
         let minutesAgo = Math.floor(diff / 60000);
+        let hoursAgo = Math.floor(minutesAgo / 60);
         let duration = activity.duration / 60000;
         let date = new Date(time).toLocaleString();
         return `
           <tr>
-            <td>${date} (${minutesAgo})</td>
+            <td>${date} (${hoursAgo})</td>
             <td>${activity.activity}</td>
           </tr>
         `;
@@ -100,7 +101,8 @@
                     label: function(context) {
                       let totalMinutes = total / 60000;
                       let percentage = context.parsed / totalMinutes * 100;
-                      return `${context.label}: ${context.parsed.toFixed(2)} minutes (${percentage.toFixed(2)}%)`;
+                      let hoursPerDay = percentage / 100 * 24;
+                      return `${context.label}: ${percentage.toFixed(2)}% (${hoursPerDay.toFixed(2)} avg. hours per day)`;
                     }
                 }
             },
