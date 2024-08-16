@@ -29,6 +29,12 @@
 
 <script>
   let chart;
+
+  function calculateTotal(data, type) {
+    return data.filter(activity => activity.activity === type).
+      reduce((acc, activity) => acc + activity.duration, 0) / 60000;
+  }
+
   function refreshStats() {
     fetch('/stats')
     .then(response => response.json())
@@ -85,9 +91,9 @@
           datasets: [{
             label: 'Minutes',
             data: [
-              d.filter(activity => activity.activity === 'outside').reduce((acc, activity) => acc + activity.duration, 0) / 60000,
-              d.filter(activity => activity.activity === 'crate').reduce((acc, activity) => acc + activity.duration, 0) / 60000,
-              d.filter(activity => activity.activity === 'walk').reduce((acc, activity) => acc + activity.duration, 0) / 60000
+              calculateTotal(d, 'outside'),
+              calculateTotal(d, 'crate'),
+              calculateTotal(d, 'walk')
             ],
             tooltip: {
                 callbacks: {
